@@ -12,6 +12,7 @@ class clamav (
   Boolean $manage_clamd         = $clamav::params::manage_clamd,
   Boolean $manage_freshclam     = $clamav::params::manage_freshclam,
   Boolean $manage_clamav_milter = $clamav::params::manage_clamav_milter,
+  Boolean $manage_clamonacc     = $clamav::params::manage_clamonacc,
   String $clamav_package        = $clamav::params::clamav_package,
   String $clamav_version        = $clamav::params::clamav_version,
 
@@ -49,6 +50,10 @@ class clamav (
   $clamav_milter_service_ensure = $clamav::params::clamav_milter_service_ensure,
   $clamav_milter_service_enable = $clamav::params::clamav_milter_service_enable,
   $clamav_milter_options        = $clamav::params::clamav_milter_options,
+
+  String $clamonacc_service     = $clamav::params::clamonacc_service,
+  $clamonacc_service_ensure     = $clamav::params::clamonacc_service_ensure,
+  Boolean $clamonacc_service_enable = $clamav::params::clamonacc_service_enable,
 ) inherits clamav::params {
 
   # clamd
@@ -91,6 +96,12 @@ class clamav (
   if $manage_clamav_milter {
     Class['clamav::install']
     -> class { 'clamav::clamav_milter': }
+    -> Anchor['clamav::end']
+  }
+
+  if $manage_clamonacc {
+    Class['clamav::install']
+    -> class { 'clamav::clamonacc': }
     -> Anchor['clamav::end']
   }
 

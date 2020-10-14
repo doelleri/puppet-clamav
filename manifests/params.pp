@@ -11,12 +11,15 @@ class clamav::params {
   $manage_clamd                 = false
   $manage_clamav_milter         = false
   $manage_freshclam             = false
+  $manage_clamonacc             = false
   $clamd_service_ensure         = 'running'
   $clamd_service_enable         = true
   $freshclam_service_ensure     = 'running'
   $freshclam_service_enable     = true
   $clamav_milter_service_ensure = 'running'
   $clamav_milter_service_enable = true
+  $clamonacc_service_ensure     = 'running'
+  $clamonacc_service_enable     = true
 
   if ($::osfamily == 'RedHat') and (versioncmp($::operatingsystemrelease, '6.0') >= 0) {
     # ### init vars ####
@@ -48,6 +51,7 @@ class clamav::params {
       $clamd_default_pidfile     = '/var/run/clamd.scan/clamd.pid'
       $freshclam_default_databaseowner = 'clamupdate'
       $freshclam_default_updatelogfile = undef # '/var/log/freshclam.log'
+      $clamonacc_default_logfile       = undef
 
       # ### freshclam vars ####
       $freshclam_package = 'clamav-update'
@@ -101,6 +105,7 @@ class clamav::params {
       $clamd_default_pidfile     = '/var/run/clamav/clamd.pid'
       $freshclam_default_databaseowner = $user
       $freshclam_default_updatelogfile = '/var/log/clamav/freshclam.log'
+      $clamonacc_default_logfile       = '/var/log/clamav/clamonacc.log'
 
       # ### freshclam vars ####
       $freshclam_package = undef
@@ -181,6 +186,7 @@ class clamav::params {
     $freshclam_default_databaseowner  = $user
     $freshclam_default_pidfile        = '/var/run/clamav/freshclam.pid'
     $freshclam_default_updatelogfile  = '/var/log/clamav/freshclam.log'
+    $clamonacc_default_logfile        = '/var/log/clamav/clamonacc.log'
 
   } else {
     fail("The ${module_name} module is not supported on a ${::osfamily} based system with version ${::operatingsystemrelease}.")
@@ -197,7 +203,6 @@ class clamav::params {
     'CrossFilesystems'               => true,
     'DatabaseDirectory'              => $clamd_default_databasedirectory,
     'Debug'                          => false,
-    'DetectBrokenExecutables'        => false,
     'DetectPUA'                      => false,
     'DisableCertCheck'               => false,
     'ExitOnOOM'                      => false,
@@ -244,7 +249,6 @@ class clamav::params {
     'ScanHTML'                       => true,
     'ScanMail'                       => true,
     'ScanOLE2'                       => true,
-    'ScanOnAccess'                   => false,
     'ScanPE'                         => true,
     'ScanPartialMessages'            => false,
     'ScanSWF'                        => true,
