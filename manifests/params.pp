@@ -44,6 +44,7 @@ class clamav::params {
       $clamd_config      = '/etc/clamd.d/scan.conf'
       $clamd_service     = 'clamd@scan'
       $clamd_options     = {}
+      $clamd_quarantine_directory = undef
 
       # ### Default values OS specific ####
       $clamd_default_localsocket = '/var/run/clamd.scan/clamd.sock'
@@ -101,6 +102,7 @@ class clamav::params {
       $clamd_config      = '/etc/clamd.conf'
       $clamd_service     = 'clamd'
       $clamd_options     = {}
+      $clamd_quarantine_directory = undef
 
       # ### Default values OS specific ####
       $clamd_default_localsocket = '/var/run/clamav/clamd.sock'
@@ -163,6 +165,7 @@ class clamav::params {
     $clamd_config      = '/etc/clamav/clamd.conf'
     $clamd_service     = 'clamav-daemon'
     $clamd_options     = {}
+    $clamd_quarantine_directory = undef
 
     # ### freshclam vars ####
     $freshclam_package = 'clamav-freshclam'

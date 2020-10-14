@@ -32,6 +32,7 @@ class clamav (
   $clamd_service_ensure         = $clamav::params::clamd_service_ensure,
   Boolean $clamd_service_enable = $clamav::params::clamd_service_enable,
   Hash $clamd_options           = $clamav::params::clamd_options,
+  $clamd_quarantine_directory   = $clamav::params::clamd_quarantine_directory,
 
   $freshclam_package            = $clamav::params::freshclam_package,
   $freshclam_version            = $clamav::params::freshclam_version,

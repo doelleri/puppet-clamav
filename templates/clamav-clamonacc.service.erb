@@ -8,7 +8,7 @@ After=clamav-daemon.service syslog.target network.target
 Type=simple
 User=root
 ExecStartPre=/bin/bash -c "while [ ! -S <%= scope['clamav::clamd_default_localsocket'] %> ]; do sleep 1; done"
-ExecStart=/usr/bin/clamonacc -F<% if scope['clamav::clamonacc_default_logfile'] %> --log=<%= scope['clamav::clamonacc_default_logfile'] %><% end %><% if scope['clamav::clamonacc_quarantine_dir'] %> --move=<%= scope['clamav::clamonacc_quarantine_dir'] %><% end %>
+ExecStart=/usr/bin/clamonacc -F<% if scope['clamav::clamonacc_default_logfile'] %> --log=<%= scope['clamav::clamonacc_default_logfile'] %><% end %><% if scope['clamav::clamd_quarantine_dir'] %> --move=<%= scope['clamav::clamd_quarantine_dir'] %><% end %>
 
 [Install]
 WantedBy=multi-user.target
