@@ -81,6 +81,9 @@ class clamav::params {
         'LogSyslog'                => 'yes',
       }
 
+      # ### clamonacc var ####
+      $clamonacc_service = 'clamonacc'
+
     } else {
       # ### user vars ####
       $user              = 'clam'
@@ -123,6 +126,9 @@ class clamav::params {
       $clamav_milter_service     = undef
       $clamav_milter_options     = undef
       $clamav_milter_default_options = undef
+
+      # ### clamonacc var ####
+      $clamonacc_service = undef
     }
 
     # ### Default values OS specific ####
@@ -174,6 +180,9 @@ class clamav::params {
     $clamav_milter_service     = undef
     $clamav_milter_options     = undef
     $clamav_milter_default_options = undef
+
+    # ### clamonacc var ####
+    $clamonacc_service = 'clamav-clamonacc'
 
     # ### Default values OS specific ####
     $clamd_default_databasedirectory  = '/var/lib/clamav'
