@@ -65,9 +65,11 @@ class clamav (
 ) inherits clamav::params {
 
   # clamd
-  $_clamd_options = merge($clamav::params::clamd_default_options, $clamd_options)
   if $clamd_quarantine_directory {
-    _$clamd_options = merge($_clamd_options, { 'ExcludePath' => Array($_clamd_options['ExcludePath']) + $clamd_quarantine_directory })
+    $_first_clamd_options = merge($clamav::params::clamd_default_options, $clamd_options)
+    $_clamd_options = merge($_first_clamd_options, { 'ExcludePath' => Array($_first_clamd_options['ExcludePath']) << $clamd_quarantine_directory })
+  } else {
+    $_clamd_options = merge($clamav::params::clamd_default_options, $clamd_options)
   }
 
   # freshclam
