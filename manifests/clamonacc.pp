@@ -13,7 +13,8 @@ class clamav::clamonacc {
     content => template("${module_name}/clamav-clamonacc.service.erb"),
   }
 
-  exec { 'systemctl daemon-reload':
+  exec { 'clamonacc systemctl daemon-reload':
+    command     => 'systemctl daemon-reload',
     path        => ['/bin', '/usr/bin'],
     subscribe   => File['clamav-clamonacc.service'],
     refreshonly => true,

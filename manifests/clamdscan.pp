@@ -22,7 +22,8 @@ class clamav::clamdscan {
     content => template("${module_name}/clamav-clamdscan.timer.erb"),
   }
 
-  exec { 'systemctl daemon-reload':
+  exec { 'clamdscan systemctl daemon-reload':
+    command     => 'systemctl daemon-reload',
     path        => ['/bin', '/usr/bin'],
     subscribe   => [File['clamav-clamdscan.service'], File['clamav-clamdscan.timer']],
     refreshonly => true,
