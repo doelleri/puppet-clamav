@@ -66,7 +66,7 @@ class clamav (
   # clamd
   $_clamd_options = merge($clamav::params::clamd_default_options, $clamd_options)
   if $clamd_quarantine_directory {
-    $_clamd_options['ExcludePath'] = Array($_clamd_options['ExcludePath']) << $clamd_quarantine_directory
+    merge($_clamd_options, { 'ExcludePath' => Array($_clamd_options['ExcludePath']) << $clamd_quarantine_directory })
   }
 
   # freshclam
