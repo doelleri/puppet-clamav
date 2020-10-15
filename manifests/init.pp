@@ -61,12 +61,13 @@ class clamav (
   String $clamdscan_timer       = $clamav::params::clamdscan_timer,
   $clamdscan_timer_ensure       = $clamav::params::clamdscan_timer_ensure,
   Boolean $clamdscan_timer_enable = $clamav::params::clamdscan_timer_enable,
+  String $clamdscan_calendar    = $clamav::params::clamdscan_calendar,
 ) inherits clamav::params {
 
   # clamd
   $_clamd_options = merge($clamav::params::clamd_default_options, $clamd_options)
   if $clamd_quarantine_directory {
-    merge($_clamd_options, { 'ExcludePath' => Array($_clamd_options['ExcludePath']) << $clamd_quarantine_directory })
+    _$clamd_options = merge($_clamd_options, { 'ExcludePath' => Array($_clamd_options['ExcludePath']) + $clamd_quarantine_directory })
   }
 
   # freshclam
