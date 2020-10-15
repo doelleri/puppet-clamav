@@ -1,0 +1,11 @@
+[Unit]
+Description=ClamAV Daemon Scanner Timer
+Documentation=man:clamdscan(1) man:clamd.conf(5) https://www.clamav.net/documents/scanning
+Requires=clamav-daemon.service
+After=clamav-daemon.service syslog.target network.target
+
+[Timer]
+OnCalendar=<%= scope['clamav::clamdscan_calendar'] %>
+
+[Install]
+WantedBy=timers.target

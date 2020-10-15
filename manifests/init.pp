@@ -13,6 +13,7 @@ class clamav (
   Boolean $manage_freshclam     = $clamav::params::manage_freshclam,
   Boolean $manage_clamav_milter = $clamav::params::manage_clamav_milter,
   Boolean $manage_clamonacc     = $clamav::params::manage_clamonacc,
+  Boolean $manage_clamdscan     = $clamav::params::manage_clamdscan,
   String $clamav_package        = $clamav::params::clamav_package,
   String $clamav_version        = $clamav::params::clamav_version,
 
@@ -32,7 +33,7 @@ class clamav (
   $clamd_service_ensure         = $clamav::params::clamd_service_ensure,
   Boolean $clamd_service_enable = $clamav::params::clamd_service_enable,
   Hash $clamd_options           = $clamav::params::clamd_options,
-  $clamd_quarantine_directory   = $clamav::params::clamd_quarantine_directory,
+  Optional[Stdlib::Absolutepath] $clamd_quarantine_directory = $clamav::params::clamd_quarantine_directory,
 
   $freshclam_package            = $clamav::params::freshclam_package,
   $freshclam_version            = $clamav::params::freshclam_version,
@@ -55,10 +56,18 @@ class clamav (
   String $clamonacc_service     = $clamav::params::clamonacc_service,
   $clamonacc_service_ensure     = $clamav::params::clamonacc_service_ensure,
   Boolean $clamonacc_service_enable = $clamav::params::clamonacc_service_enable,
+
+  String $clamdscan_service     = $clamav::params::clamdscan_service,
+  String $clamdscan_timer       = $clamav::params::clamdscan_timer,
+  $clamdscan_timer_ensure       = $clamav::params::clamdscan_timer_ensure,
+  Boolean $clamdscan_timer_enable = $clamav::params::clamdscan_timer_enable,
 ) inherits clamav::params {
 
   # clamd
   $_clamd_options = merge($clamav::params::clamd_default_options, $clamd_options)
+  if $clamd_quarantine_directory {
+    $_clamd_options['ExcludePath'] = Array($_clamd_options['ExcludePath']) << $clamd_quarantine_directory
+  }
 
   # freshclam
   $_freshclam_options = merge($clamav::params::freshclam_default_options, $freshclam_options)
@@ -103,6 +112,12 @@ class clamav (
   if $manage_clamonacc {
     Class['clamav::install']
     -> class { 'clamav::clamonacc': }
+    -> Anchor['clamav::end']
+  }
+
+  if $manage_clamdscan {
+    Class['clamav::install']
+    -> class { 'clamav::clamdscan': }
     -> Anchor['clamav::end']
   }
 

@@ -12,6 +12,7 @@ class clamav::params {
   $manage_clamav_milter         = false
   $manage_freshclam             = false
   $manage_clamonacc             = false
+  $manage_clamdscan             = false
   $clamd_service_ensure         = 'running'
   $clamd_service_enable         = true
   $freshclam_service_ensure     = 'running'
@@ -20,6 +21,8 @@ class clamav::params {
   $clamav_milter_service_enable = true
   $clamonacc_service_ensure     = 'running'
   $clamonacc_service_enable     = true
+  $clamdscan_timer_ensure       = 'running'
+  $clamdscan_timer_enable       = true
 
   if ($::osfamily == 'RedHat') and (versioncmp($::operatingsystemrelease, '6.0') >= 0) {
     # ### init vars ####
@@ -53,6 +56,9 @@ class clamav::params {
       $freshclam_default_databaseowner = 'clamupdate'
       $freshclam_default_updatelogfile = undef # '/var/log/freshclam.log'
       $clamonacc_default_logfile       = undef
+      $clamdscan_default_logfile       = undef
+      $clamdscan_calendar              = undef
+      $clamdscan_directory             = undef
 
       # ### freshclam vars ####
       $freshclam_package = 'clamav-update'
@@ -85,6 +91,10 @@ class clamav::params {
       # ### clamonacc var ####
       $clamonacc_service = 'clamonacc'
 
+      # ### clamdscan var ####
+      $clamdscan_service = 'clamav-clamdscan.service'
+      $clamdscan_timer   = 'clamav-clamdscan.timer'
+
     } else {
       # ### user vars ####
       $user              = 'clam'
@@ -111,6 +121,9 @@ class clamav::params {
       $freshclam_default_databaseowner = $user
       $freshclam_default_updatelogfile = '/var/log/clamav/freshclam.log'
       $clamonacc_default_logfile       = '/var/log/clamav/clamonacc.log'
+      $clamdscan_default_logfile       = '/var/log/clamav/clamdscan.log'
+      $clamdscan_calendar              = 'weekly'
+      $clamdscan_directory             = '/'
 
       # ### freshclam vars ####
       $freshclam_package = undef
@@ -131,6 +144,10 @@ class clamav::params {
 
       # ### clamonacc var ####
       $clamonacc_service = undef
+
+      # ### clamdscan var ####
+      $clamdscan_service = undef
+      $clamdscan_timer   = under
     }
 
     # ### Default values OS specific ####
@@ -187,6 +204,10 @@ class clamav::params {
     # ### clamonacc var ####
     $clamonacc_service = 'clamav-clamonacc'
 
+    # ### clamdscan var ####
+    $clamdscan_service = 'clamav-clamdscan.service'
+    $clamdscan_timer   = 'clamav-clamdscan.timer'
+
     # ### Default values OS specific ####
     $clamd_default_databasedirectory  = '/var/lib/clamav'
     $clamd_default_localsocket        = '/var/run/clamav/clamd.ctl'
@@ -199,6 +220,9 @@ class clamav::params {
     $freshclam_default_pidfile        = '/var/run/clamav/freshclam.pid'
     $freshclam_default_updatelogfile  = '/var/log/clamav/freshclam.log'
     $clamonacc_default_logfile        = '/var/log/clamav/clamonacc.log'
+    $clamdscan_default_logfile        = '/var/log/clamav/clamdscan.log'
+    $clamdscan_calendar               = 'weekly'
+    $clamdscan_directory              = '/'
 
   } else {
     fail("The ${module_name} module is not supported on a ${::osfamily} based system with version ${::operatingsystemrelease}.")
@@ -217,6 +241,7 @@ class clamav::params {
     'Debug'                          => false,
     'DetectPUA'                      => false,
     'DisableCertCheck'               => false,
+    'ExcludePath'                    => ['^/sys', '^/dev'],
     'ExitOnOOM'                      => false,
     'ExtendedDetectionInfo'          => true,
     'FixStaleSocket'                 => true,
